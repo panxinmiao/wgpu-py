@@ -58,7 +58,7 @@ logger = logging.getLogger("wgpu")  # noqa
 apidiff = ApiDiff()
 
 # The wgpu-native version that we target/expect
-__version__ = "0.12.0.1"
+__version__ = "0.13.0.1"
 __commit_sha__ = "0ff888a666e6e787af9bc9c9afc35a5055547b5a"
 version_info = tuple(map(int, __version__.split(".")))
 check_expected_version(version_info)  # produces a warning on mismatch
@@ -743,7 +743,7 @@ class GPUDevice(base.GPUDevice, GPUObjectBase):
             # not used: nextInChain
         )
 
-        # H: WGPUSampler f(WGPUDevice device, WGPUSamplerDescriptor const * descriptor)
+        # H: WGPUSampler f(WGPUDevice device, WGPUSamplerDescriptor const * descriptor /* nullable */)
         id = lib.wgpuDeviceCreateSampler(self._internal, struct)
         return GPUSampler(label, id, self)
 
@@ -1254,7 +1254,7 @@ class GPUDevice(base.GPUDevice, GPUObjectBase):
             # not used: nextInChain
         )
 
-        # H: WGPUCommandEncoder f(WGPUDevice device, WGPUCommandEncoderDescriptor const * descriptor)
+        # H: WGPUCommandEncoder f(WGPUDevice device, WGPUCommandEncoderDescriptor const * descriptor /* nullable */)
         id = lib.wgpuDeviceCreateCommandEncoder(self._internal, struct)
         return GPUCommandEncoder(label, id, self)
 
@@ -1301,8 +1301,8 @@ class GPUBuffer(base.GPUBuffer, GPUObjectBase):
         # Let it do some cycles
         # H: void f(WGPUInstance instance)
         # lib.wgpuInstanceProcessEvents(ffi.NULL)
-        # H: void f(WGPUDevice device, bool force_wait)
-        lib.wgpuDevicePoll(self._device._internal, True)
+        # H: bool f(WGPUDevice device, bool wait, WGPUWrappedSubmissionIndex const * wrappedSubmissionIndex)
+        lib.wgpuDevicePoll(self._device._internal, True, ffi.NULL)
 
         if status != 0:  # no-cover
             raise RuntimeError(f"Could not read buffer data ({status}).")
@@ -1340,8 +1340,8 @@ class GPUBuffer(base.GPUBuffer, GPUObjectBase):
         # Let it do some cycles
         # H: void f(WGPUInstance instance)
         # lib.wgpuInstanceProcessEvents(ffi.NULL)
-        # H: void f(WGPUDevice device, bool force_wait)
-        lib.wgpuDevicePoll(self._device._internal, True)
+        # H: bool f(WGPUDevice device, bool wait, WGPUWrappedSubmissionIndex const * wrappedSubmissionIndex)
+        lib.wgpuDevicePoll(self._device._internal, True, ffi.NULL)
 
         if status != 0:  # no-cover
             raise RuntimeError(f"Could not read buffer data ({status}).")
@@ -1412,7 +1412,7 @@ class GPUTexture(base.GPUTexture, GPUObjectBase):
             arrayLayerCount=array_layer_count,
             # not used: nextInChain
         )
-        # H: WGPUTextureView f(WGPUTexture texture, WGPUTextureViewDescriptor const * descriptor)
+        # H: WGPUTextureView f(WGPUTexture texture, WGPUTextureViewDescriptor const * descriptor /* nullable */)
         id = lib.wgpuTextureCreateView(self._internal, struct)
         return GPUTextureView(label, id, self._device, self, self.size)
 
@@ -1668,7 +1668,7 @@ class GPUCommandEncoder(
             # not used: timestampWriteCount
             # not used: timestampWrites
         )
-        # H: WGPUComputePassEncoder f(WGPUCommandEncoder commandEncoder, WGPUComputePassDescriptor const * descriptor)
+        # H: WGPUComputePassEncoder f(WGPUCommandEncoder commandEncoder, WGPUComputePassDescriptor const * descriptor /* nullable */)
         raw_pass = lib.wgpuCommandEncoderBeginComputePass(self._internal, struct)
         return GPUComputePassEncoder(label, raw_pass, self)
 
@@ -1968,7 +1968,7 @@ class GPUCommandEncoder(
             label=to_c_label(label),
             # not used: nextInChain
         )
-        # H: WGPUCommandBuffer f(WGPUCommandEncoder commandEncoder, WGPUCommandBufferDescriptor const * descriptor)
+        # H: WGPUCommandBuffer f(WGPUCommandEncoder commandEncoder, WGPUCommandBufferDescriptor const * descriptor /* nullable */)
         id = lib.wgpuCommandEncoderFinish(self._internal, struct)
         # WGPU destroys the command encoder when it's finished. So we set
         # _internal to None to avoid dropping a nonexistent object.
@@ -2013,14 +2013,14 @@ class GPUComputePassEncoder(
         self, workgroup_count_x, workgroup_count_y=1, workgroup_count_z=1
     ):
         # H: void f(WGPUComputePassEncoder computePassEncoder, uint32_t workgroupCountX, uint32_t workgroupCountY, uint32_t workgroupCountZ)
-        lib.wgpuComputePassEncoderDispatch(
+        lib.wgpuComputePassEncoderDispatchWorkgroups(
             self._internal, workgroup_count_x, workgroup_count_y, workgroup_count_z
         )
 
     def dispatch_workgroups_indirect(self, indirect_buffer, indirect_offset):
         buffer_id = indirect_buffer._internal
         # H: void f(WGPUComputePassEncoder computePassEncoder, WGPUBuffer indirectBuffer, uint64_t indirectOffset)
-        lib.wgpuComputePassEncoderDispatchIndirect(
+        lib.wgpuComputePassEncoderDispatchWorkgroupsIndirect(
             self._internal, buffer_id, int(indirect_offset)
         )
 

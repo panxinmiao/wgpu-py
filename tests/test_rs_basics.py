@@ -83,7 +83,7 @@ compute_shader_wgsl = """
 @binding(0)
 var<storage,read_write> out1: array<i32>;
 
-@stage(compute)
+@compute
 @workgroup_size(1)
 fn main(@builtin(global_invocation_id) index: vec3<u32>) {
     let i: u32 = index.x;
@@ -656,7 +656,7 @@ def test_write_texture2():
     assert iters_equal(data0, data2)
 
 
-def test_parse_shader_error(caplog):
+def test_shader_error(caplog):
 
     device = wgpu.utils.get_default_device()
 
@@ -667,7 +667,7 @@ def test_parse_shader_error(caplog):
         @builtin(position) position: vec4<f32>,
     };
 
-    @stage(vertex)
+    @vertex
     fn vs_main(@builtin(vertex_index) vertex_index : u32) -> VertexOutput {
         var out: VertexOutput;
         out.invalid_attr = vec4<f32>(0.0, 0.0, 1.0);
@@ -758,11 +758,11 @@ Parsing error: unknown scalar type: 'f3'
         @builtin(position) position: vec3<f32>,
     };
 
-    @stage(vertex)
+    @vertex
     fn vs_main(@builtin(vertex_index) vertex_index : u32) -> VertexOutput {
         var out: VertexOutput;
-        var matrix: mat4x4<f32>;
-        out.position = matrix * out.position;
+        var _matrix: mat4x4<f32>;
+        out.position = _matrix * out.position;
         return out;
     }
     """  # noqa
@@ -790,8 +790,8 @@ Validation error: Function(Expression { handle: [8], error: InvalidBinaryOperand
 
    ┌─ wgsl:11:22
    │
-11 │         out.position = matrix * out.position;
-   │                       ^^^^^^^^^^^^^^^^^^^^^^ InvalidBinaryOperandTypes(Multiply, [5], [7])
+11 │         out.position = _matrix * out.position;
+   │                       ^^^^^^^^^^^^^^^^^^^^^^^ InvalidBinaryOperandTypes(Multiply, [5], [7])
    │
    = note:
 """.strip()  # noqa

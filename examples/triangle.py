@@ -30,7 +30,7 @@ struct VertexOutput {
     @builtin(position) pos: vec4<f32>,
 };
 
-@stage(vertex)
+@vertex
 fn vs_main(in: VertexInput) -> VertexOutput {
     var positions = array<vec2<f32>, 3>(vec2<f32>(0.0, -0.5), vec2<f32>(0.5, 0.5), vec2<f32>(-0.5, 0.7));
     let index = i32(in.vertex_index);
@@ -42,7 +42,7 @@ fn vs_main(in: VertexInput) -> VertexOutput {
     return out;
 }
 
-@stage(fragment)
+@fragment
 fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
     return in.color;
 }

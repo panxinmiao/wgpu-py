@@ -2,8 +2,8 @@
 ## Preparing
 * The webgpu.idl defines 35 classes with 75 functions
 * The webgpu.idl defines 5 flags, 33 enums, 58 structs
-* The wgpu.h defines 131 functions
-* The wgpu.h defines 5 flags, 48 enums, 74 structs
+* The wgpu.h defines 150 functions
+* The wgpu.h defines 5 flags, 48 enums, 83 structs
 ## Updating API
 * Wrote 5 flags to flags.py
 * Wrote 33 enums to enums.py
@@ -26,5 +26,5 @@
 * Enum CanvasCompositingAlphaMode missing in wgpu.h
 * Wrote 231 enum mappings and 49 struct-field mappings to rs_mappings.py
 * Validated 80 C function calls
-* Not using 56 C functions
+* Not using 75 C functions
 * Validated 70 C structs

@@ -163,7 +163,7 @@ struct VertexOutput {
     @builtin(position) pos: vec4<f32>,
 };
 
-@stage(vertex)
+@vertex
 fn vs_main(in: VertexInput) -> VertexOutput {
     let ndc: vec4<f32> = r_locals.transform * in.pos;
     var out: VertexOutput;
@@ -178,7 +178,7 @@ var r_tex: texture_2d<f32>;
 @group(0) @binding(2)
 var r_sampler: sampler;
 
-@stage(fragment)
+@fragment
 fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
     let value = textureSample(r_tex, r_sampler, in.texcoord).r;
     return vec4<f32>(value, value, value, 1.0);

@@ -125,10 +125,11 @@ class HParser:
             self.structs[name] = struct = {}
             for f in code[i2 + 1 : i3].strip().strip(";").split(";"):
                 parts = remove_c_comments(f).strip().split()
-                typename = " ".join(parts[:-1])
-                typename = typename.replace("const ", "")
-                key = parts[-1].strip("*")
-                struct[key] = typename
+                if parts:
+                    typename = " ".join(parts[:-1])
+                    typename = typename.replace("const ", "")
+                    key = parts[-1].strip("*")
+                    struct[key] = typename
 
         # Collect functions. This is not too hard, since we only need the C code.
         i1 = i2 = i3 = 0

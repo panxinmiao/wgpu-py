@@ -25,7 +25,7 @@ struct VertexOutput {
     @builtin(position) position: vec4<f32>,
 };
 
-@stage(vertex)
+@vertex
 fn vs_main(@builtin(vertex_index) vertex_index : u32) -> VertexOutput {
     var positions: array<vec2<f32>, 4> = array<vec2<f32>, 4>(
         vec2<f32>(-0.5, -0.5),
@@ -68,10 +68,10 @@ def test_render_textured_square_rgba8unorm():
         @group(0) @binding(1)
         var r_sampler: sampler;
 
-        @stage(fragment)
+        @fragment
         fn fs_main(in: VertexOutput, ) -> @location(0) vec4<f32> {
-            let sample = textureSample(r_tex, r_sampler, in.texcoord);
-            return sample;
+            let _sample = textureSample(r_tex, r_sampler, in.texcoord);
+            return _sample;
         }
     """
 
@@ -97,12 +97,12 @@ def test_render_textured_square_rgba8uint():
         @group(0) @binding(1)
         var r_sampler: sampler;
 
-        @stage(fragment)
+        @fragment
         fn fs_main(in: VertexOutput, ) -> @location(0) vec4<f32> {
             // let sample = textureSample(r_tex, r_sampler, in.texcoord);
             let texcoords_u = vec2<i32>(in.texcoord * vec2<f32>(textureDimensions(r_tex)));
-            let sample = textureLoad(r_tex, texcoords_u, 0);
-            return vec4<f32>(sample) / 255.0;
+            let _sample = textureLoad(r_tex, texcoords_u, 0);
+            return vec4<f32>(_sample) / 255.0;
         }
     """
 
@@ -128,12 +128,12 @@ def test_render_textured_square_rgba16sint():
         @group(0) @binding(1)
         var r_sampler: sampler;
 
-        @stage(fragment)
+        @fragment
         fn fs_main(in: VertexOutput, ) -> @location(0) vec4<f32> {
             // let sample = textureSample(r_tex, r_sampler, in.texcoord);
             let texcoords_u = vec2<i32>(in.texcoord * vec2<f32>(textureDimensions(r_tex)));
-            let sample = textureLoad(r_tex, texcoords_u, 0);
-            return vec4<f32>(sample) / 255.0;
+            let _sample = textureLoad(r_tex, texcoords_u, 0);
+            return vec4<f32>(_sample) / 255.0;
         }
     """
 
@@ -159,10 +159,10 @@ def test_render_textured_square_rgba32float():
         @group(0) @binding(1)
         var r_sampler: sampler;
 
-        @stage(fragment)
+        @fragment
         fn fs_main(in: VertexOutput, ) -> @location(0) vec4<f32> {
-            let sample = textureSample(r_tex, r_sampler, in.texcoord);
-            return sample / 255.0;
+            let _sample = textureSample(r_tex, r_sampler, in.texcoord);
+            return _sample / 255.0;
         }
     """
 
@@ -193,10 +193,10 @@ def test_render_textured_square_rg8unorm():
         @group(0) @binding(1)
         var r_sampler: sampler;
 
-        @stage(fragment)
+        @fragment
         fn fs_main(in: VertexOutput, ) -> @location(0) vec4<f32> {
-            let sample = textureSample(r_tex, r_sampler, in.texcoord);
-            return sample;
+            let _sample = textureSample(r_tex, r_sampler, in.texcoord);
+            return _sample;
         }
     """
 
@@ -222,12 +222,12 @@ def test_render_textured_square_rg8uint():
         @group(0) @binding(1)
         var r_sampler: sampler;
 
-        @stage(fragment)
+        @fragment
         fn fs_main(in: VertexOutput, ) -> @location(0) vec4<f32> {
             // let sample = textureSample(r_tex, r_sampler, in.texcoord);
             let texcoords_u = vec2<i32>(in.texcoord * vec2<f32>(textureDimensions(r_tex)));
-            let sample = textureLoad(r_tex, texcoords_u, 0);
-            return vec4<f32>(f32(sample.r) / 255.0, f32(sample.g) / 255.0, 0.0, 1.0);
+            let _sample = textureLoad(r_tex, texcoords_u, 0);
+            return vec4<f32>(f32(_sample.r) / 255.0, f32(_sample.g) / 255.0, 0.0, 1.0);
         }
     """
 
@@ -253,12 +253,12 @@ def test_render_textured_square_rg16sint():
         @group(0) @binding(1)
         var r_sampler: sampler;
 
-        @stage(fragment)
+        @fragment
         fn fs_main(in: VertexOutput, ) -> @location(0) vec4<f32> {
             // let sample = textureSample(r_tex, r_sampler, in.texcoord);
             let texcoords_u = vec2<i32>(in.texcoord * vec2<f32>(textureDimensions(r_tex)));
-            let sample = textureLoad(r_tex, texcoords_u, 0);
-            return vec4<f32>(f32(sample.r) / 255.0, f32(sample.g) / 255.0, 0.0, 1.0);
+            let _sample = textureLoad(r_tex, texcoords_u, 0);
+            return vec4<f32>(f32(_sample.r) / 255.0, f32(_sample.g) / 255.0, 0.0, 1.0);
         }
     """
 
@@ -284,10 +284,10 @@ def test_render_textured_square_rg32float():
         @group(0) @binding(1)
         var r_sampler: sampler;
 
-        @stage(fragment)
+        @fragment
         fn fs_main(in: VertexOutput, ) -> @location(0) vec4<f32> {
-            let sample = textureSample(r_tex, r_sampler, in.texcoord);
-            return vec4<f32>(sample.rg / 255.0, 0.0, 1.0);
+            let _sample = textureSample(r_tex, r_sampler, in.texcoord);
+            return vec4<f32>(_sample.rg / 255.0, 0.0, 1.0);
         }
     """
 
@@ -314,10 +314,10 @@ def test_render_textured_square_r8unorm():
         @group(0) @binding(1)
         var r_sampler: sampler;
 
-        @stage(fragment)
+        @fragment
         fn fs_main(in: VertexOutput, ) -> @location(0) vec4<f32> {
-            let sample = textureSample(r_tex, r_sampler, in.texcoord);
-            let val = sample.r;
+            let _sample = textureSample(r_tex, r_sampler, in.texcoord);
+            let val = _sample.r;
             return vec4<f32>(val, val, 0.0, 1.0);
         }
     """
@@ -342,11 +342,11 @@ def test_render_textured_square_r8uint():
         @group(0) @binding(1)
         var r_sampler: sampler;
 
-        @stage(fragment)
+        @fragment
         fn fs_main(in: VertexOutput, ) -> @location(0) vec4<f32> {
             let texcoords_u = vec2<i32>(in.texcoord * vec2<f32>(textureDimensions(r_tex)));
-            let sample = textureLoad(r_tex, texcoords_u, 0);
-            let val = f32(sample.r) / 255.0;
+            let _sample = textureLoad(r_tex, texcoords_u, 0);
+            let val = f32(_sample.r) / 255.0;
             return vec4<f32>(val, val, 0.0, 1.0);
         }
     """
@@ -371,11 +371,11 @@ def test_render_textured_square_r16sint():
         @group(0) @binding(1)
         var r_sampler: sampler;
 
-        @stage(fragment)
+        @fragment
         fn fs_main(in: VertexOutput, ) -> @location(0) vec4<f32> {
             let texcoords_u = vec2<i32>(in.texcoord * vec2<f32>(textureDimensions(r_tex)));
-            let sample = textureLoad(r_tex, texcoords_u, 0);
-            let val = f32(sample.r) / 255.0;
+            let _sample = textureLoad(r_tex, texcoords_u, 0);
+            let val = f32(_sample.r) / 255.0;
             return vec4<f32>(val, val, 0.0, 1.0);
         }
     """
@@ -400,11 +400,11 @@ def test_render_textured_square_r32sint():
         @group(0) @binding(1)
         var r_sampler: sampler;
 
-        @stage(fragment)
+        @fragment
         fn fs_main(in: VertexOutput, ) -> @location(0) vec4<f32> {
             let texcoords_u = vec2<i32>(in.texcoord * vec2<f32>(textureDimensions(r_tex)));
-            let sample = textureLoad(r_tex, texcoords_u, 0);
-            let val = f32(sample.r) / 255.0;
+            let _sample = textureLoad(r_tex, texcoords_u, 0);
+            let val = f32(_sample.r) / 255.0;
             return vec4<f32>(val, val, 0.0, 1.0);
         }
     """
@@ -429,10 +429,10 @@ def test_render_textured_square_r32float():
         @group(0) @binding(1)
         var r_sampler: sampler;
 
-        @stage(fragment)
+        @fragment
         fn fs_main(in: VertexOutput, ) -> @location(0) vec4<f32> {
-            let sample = textureSample(r_tex, r_sampler, in.texcoord);
-            let val = sample.r / 255.0;
+            let _sample = textureSample(r_tex, r_sampler, in.texcoord);
+            let val = _sample.r / 255.0;
             return vec4<f32>(val, val, 0.0, 1.0);
         }
     """

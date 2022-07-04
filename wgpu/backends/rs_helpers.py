@@ -277,7 +277,7 @@ def parse_wgpu_shader_error(message):
 
         next_n = source.index("\n", end)
         s = source[:next_n]
-        lines = s.splitlines(True)
+        lines = s.splitlines()
         line_num = len(lines)
         line = lines[-1]
         line_pos = start - (next_n - len(line))
